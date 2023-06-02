@@ -7,48 +7,53 @@ import org.springframework.web.bind.annotation.*;
 
 import java.rmi.ServerException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
-    private final MovieService movieService;
+//    private final MovieService movieService;
+//
+//    public MovieController(MovieService movieService) {
+//        this.movieService = movieService;
+//    }
 
-    public MovieController(MovieService movieService) {
-        this.movieService = movieService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Movie>> findAll() {
-        var movies = movieService.findAll();
-
-        return ResponseEntity.ok(movies);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Movie>> findAll() {
+//        var movies = movieService.findAll();
+//
+//        return ResponseEntity.ok(movies);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Movie> findById(@PathVariable long id) {
-        Movie movie = movieService.findById(id);
+        try {
+            Movie movie = new Movie("Pulp Fiction");
 
-        return ResponseEntity.ok(movie);
+            return ResponseEntity.ok(movie);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Movie> add(@RequestBody Movie movieToAdd) {
-        var addedMovie = movieService.save(movieToAdd);
+//    @PostMapping("/add")
+//    public ResponseEntity<Movie> add(@RequestBody Movie movieToAdd) {
+//        var addedMovie = movieService.save(movieToAdd);
+//
+//        return ResponseEntity.ok(addedMovie);
+//    }
+//
+//    @PutMapping("/update")
+//    public ResponseEntity<Movie> update(@RequestBody Movie movieToUpdate) {
+//        var updatedMovie = movieService.save(movieToUpdate);
+//
+//        return ResponseEntity.ok(updatedMovie);
+//    }
 
-        return ResponseEntity.ok(addedMovie);
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<Movie> update(@RequestBody Movie movieToUpdate) {
-        var updatedMovie = movieService.save(movieToUpdate);
-
-        return ResponseEntity.ok(updatedMovie);
-    }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestBody Movie movieToDelete) {
-        movieService.delete(movieToDelete);
-
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/delete")
+//    public ResponseEntity<Void> delete(@RequestBody Movie movieToDelete) {
+//        movieService.delete(movieToDelete);
+//
+//        return ResponseEntity.noContent().build();
+//    }
 }

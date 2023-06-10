@@ -1,7 +1,11 @@
 package com.example.movieservice.Service;
 
 import com.example.movieservice.Entity.Movie;
+import com.example.movieservice.Exception.MovieNotFoundException;
+import com.example.movieservice.Exception.MovieNotValidException;
 import com.example.movieservice.Repository.MovieRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,17 +24,27 @@ public class MovieService {
     }
 
     public Movie findById(Long id) {
-        return movieRepository.findById(id).orElseThrow();
+        return movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
     }
 
-    public Movie save(Movie movie) {
+    public Movie add(Movie movie) {
         var movieIsValid = validateMovie(movie);
 
         if (!movieIsValid) {
-            throw new IllegalArgumentException("Invalid movie data. Please check the provided fields.");
+            throw new MovieNotValidException();
         }
 
         return movieRepository.save(movie);
+    }
+
+    public Movie update(long id, Movie updatedMovie) {
+
+
+        var movieToUpdate = findById(id);
+
+        updatedMovie.setId(movieToUpdate.getId());
+
+        return movieRepository.save(updatedMovie);
     }
 
     private boolean validateMovie(Movie movie) {
@@ -42,14 +56,10 @@ public class MovieService {
             return false;
         }
 
-        if (movie.getGenre() == null) {
-            return false;
-        }
-
-        return true;
+        return movie.getGenre() != null;
     }
 
-    public void delete(Movie movie) {
-        movieRepository.delete(movie);
+    public void delete(long id) {
+        movieRepository.delete(findById(id));
     }
 }

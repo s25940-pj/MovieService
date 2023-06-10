@@ -9,33 +9,47 @@ import java.util.NoSuchElementException;
 
 @Service
 public class MovieService {
-//    private final MovieRepository movieRepository;
-//
-//    public MovieService(MovieRepository movieRepository) {
-//        this.movieRepository = movieRepository;
-//    }
-//
-//    public Movie findById(Long id) {
-//        try {
-//            return movieRepository.findById(id).orElseThrow();
-//        } catch (NoSuchElementException e) {
-//            throw new NoSuchElementException();
-//        }
-//    }
-//
-//    public List<Movie> findAll() {
-//        return movieRepository.findAll();
-//    }
-//
-////    public Movie save(Movie movie) {
-////        try {
-////            return movieRepository.save(movie);
-////        } catch (Exception) {
-////            throw new Exception();
-////        }
-////    }
-//
-//    public void delete(Movie movie) {
-//        movieRepository.delete(movie);
-//    }
+    private final MovieRepository movieRepository;
+
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
+
+    public List<Movie> findAll() {
+        return movieRepository.findAll();
+    }
+
+    public Movie findById(Long id) {
+        return movieRepository.findById(id).orElseThrow();
+    }
+
+    public Movie save(Movie movie) {
+        var movieIsValid = validateMovie(movie);
+
+        if (!movieIsValid) {
+            throw new IllegalArgumentException("Invalid movie data. Please check the provided fields.");
+        }
+
+        return movieRepository.save(movie);
+    }
+
+    private boolean validateMovie(Movie movie) {
+        if (movie.getTitle().isBlank()) {
+            return false;
+        }
+
+        if (movie.getReleaseDate() == null) {
+            return false;
+        }
+
+        if (movie.getGenre() == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void delete(Movie movie) {
+        movieRepository.delete(movie);
+    }
 }

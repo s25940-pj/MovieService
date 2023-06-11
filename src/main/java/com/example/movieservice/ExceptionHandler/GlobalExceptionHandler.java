@@ -1,6 +1,7 @@
 package com.example.movieservice.ExceptionHandler;
 
 import com.example.movieservice.Exception.MovieNotFoundException;
+import com.example.movieservice.Exception.MovieNotValidException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,8 +14,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(HttpClientErrorException.BadRequest.class)
-    public ResponseEntity<Void> handleMovieNotValid(HttpClientErrorException.BadRequest exception) {
+    @ExceptionHandler(MovieNotValidException.class)
+    public ResponseEntity<Void> handleMovieNotValid(MovieNotValidException exception) {
         return ResponseEntity.badRequest().build();
     }
 }

@@ -42,4 +42,11 @@ public class MovieController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/set-available")
+    public ResponseEntity<Void> setMovieAvailable(@PathVariable long id) {
+        movieService.setMovieAvailable(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
